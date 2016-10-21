@@ -1,7 +1,19 @@
 require "selections/version"
-require "activerecord"
-require "ranked_model"
+require "active_record"
+require "active_support/concern"
+require "ranked-model"
 
 module Selections
-  # Your code goes here...
+  module BelongsToSelection
+    def belongs_to_selection(name, scope = nil, options = {})
+      belongs_to name, scope, options
+    end
+
+
+    ActiveSupport.on_load :active_record do
+      extend Selections::BelongsToSelection
+    end
+  end
+
+
 end
