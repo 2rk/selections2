@@ -13,6 +13,7 @@ end
 ActiveRecord::Migration.create_table :selections do |t|
   t.integer :position
   t.string :type
+  t.string :system_code
   t.timestamps
 end
 
