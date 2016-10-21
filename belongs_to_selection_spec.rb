@@ -25,6 +25,40 @@ describe Selections::BelongsToSelection, type: :model do
       expect(ticket).to respond_to(:priority_high?)
       expect(ticket).to respond_to(:priority_low?)
       expect(ticket.priority_high?).to be_truthy
+      expect(ticket).to_not respond_to(:priority_other?)
+    end
+
+    context 'options' do
+      context 'other' do
+        it 'other support defaults to off' do
+          class Ticket < ActiveRecord::Base
+            include Selections::BelongsToSelection
+            belongs_to_selection :priority
+          end
+
+          ticket = Ticket.new
+          expect(ticket).to_not be_priority_option_other
+        end
+        it 'other support can be enabled' do
+          class Ticket < ActiveRecord::Base
+            include Selections::BelongsToSelection
+            belongs_to_selection :priority, other: true
+          end
+
+          ticket = Ticket.new
+          expect(ticket).to be_priority_option_other
+        end
+        it 'it should add delegate of priority_other?' do
+          class Ticket < ActiveRecord::Base
+            include Selections::BelongsToSelection
+            belongs_to_selection :priority, other: true
+          end
+
+          ticket = Ticket.new(priority_id: -1)
+          expect(ticket).to respond_to(:priority_other?)
+          expect(ticket.priority_other?).to be_truthy
+        end
+      end
     end
   end
 end
